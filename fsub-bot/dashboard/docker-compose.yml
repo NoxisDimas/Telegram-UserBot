@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: .
+    container_name: fsub-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"  # Expose port 80 on host, matching nginx container
+    depends_on:
+      - backend
+
+  backend:
+    # Ganti "build: ../bot" atau "image: nama_image_backend" dengan setup backend Anda
+    build: ../bot
+    container_name: fsub-backend
+    restart: unless-stopped
+    # Port tidak di-expose ke host (ports: ...) agar backend hanya bisa diakses via Nginx reverse proxy di jaringan internal Docker
