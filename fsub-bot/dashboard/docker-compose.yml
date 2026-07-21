@@ -6,13 +6,11 @@ services:
     container_name: fsub-frontend
     restart: unless-stopped
     ports:
-      - "80:80"  # Expose port 80 on host, matching nginx container
-    depends_on:
-      - backend
+      - "8080:80"  # Menyesuaikan dengan port yang Anda gunakan di Cloud Shell (8080)
+    networks:
+      - bot_default
 
-  backend:
-    # Ganti "build: ../bot" atau "image: nama_image_backend" dengan setup backend Anda
-    build: ../bot
-    container_name: fsub-backend
-    restart: unless-stopped
-    # Port tidak di-expose ke host (ports: ...) agar backend hanya bisa diakses via Nginx reverse proxy di jaringan internal Docker
+networks:
+  bot_default:
+    external: true
+    # Jika nama network backend Anda berbeda, ganti 'bot_default' di atas dan di bawah dengan nama yang benar.
