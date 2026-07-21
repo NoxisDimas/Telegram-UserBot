@@ -8,9 +8,8 @@ services:
     ports:
       - "8080:80"  # Menyesuaikan dengan port yang Anda gunakan di Cloud Shell (8080)
     networks:
-      - bot_default
+      - bot_fsub-net
 
 networks:
-  bot_default:
+  bot_fsub-net:
     external: true
-    # Jika nama network backend Anda berbeda, ganti 'bot_default' di atas dan di bawah dengan nama yang benar.
