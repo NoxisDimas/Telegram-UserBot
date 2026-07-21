@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Abaikan folder backend
+fsub-bot/bot/
+
+# Jika Anda menaruh .gitignore di dalam folder fsub-bot, cukup tulis:
+# bot/
+
