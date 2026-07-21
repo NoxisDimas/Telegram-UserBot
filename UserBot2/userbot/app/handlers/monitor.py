@@ -643,6 +643,45 @@ async def setup_monitor(client: TelegramClient):
             logger.error("Get ID failed", error=str(e))
             await event.edit(f"❌ Error: {str(e)}")
 
+    @client.on(events.NewMessage(outgoing=True, pattern=r"^\.leavemute$"))
+    async def leavemute_handler(event):
+        """Handle .leavemute command - leave groups where user is muted"""
+        try:
+            status_msg = await event.edit("🔍 Memeriksa grup di mana Anda di-mute...")
+            
+            dialogs = await client.get_dialogs()
+            left_count = 0
+            error_count = 0
+            
+            for d in dialogs:
+                if d.is_group:
+                    is_muted = False
+                    entity = d.entity
+                    
+                    # Cek hak khusus user (user di-mute secara spesifik)
+                    if getattr(entity, 'banned_rights', None) and entity.banned_rights.send_messages:
+                        is_muted = True
+                    # Cek hak default grup (grup mute semua member) jika user bukan admin
+                    elif getattr(entity, 'default_banned_rights', None) and entity.default_banned_rights.send_messages:
+                        if not getattr(entity, 'admin_rights', None):
+                            is_muted = True
+                            
+                    if is_muted:
+                        try:
+                            await client.delete_dialog(entity)
+                            left_count += 1
+                            await asyncio.sleep(1) # Jeda untuk menghindari FloodWait
+                        except Exception as e:
+                            logger.error(f"Failed to leave {getattr(entity, 'id', 'unknown')}", error=str(e))
+                            error_count += 1
+                            
+            await status_msg.edit(f"✅ **Selesai!**\nBerhasil keluar dari `{left_count}` grup yang me-mute Anda.\nGagal: `{error_count}`")
+            
+        except Exception as e:
+            logger.error("Leavemute failed", error=str(e))
+            await event.edit(f"❌ Error: {str(e)}")
+
+
     @client.on(events.NewMessage(outgoing=True, pattern=r"^\.help$"))
     async def help_handler(event):
         """Handle .help command - show all commands"""
@@ -678,6 +717,7 @@ async def setup_monitor(client: TelegramClient):
 `.backup` - Backup session
 `.afk [reason]` - Enable AFK
 `.back` - Disable AFK
+`.leavemute` - Keluar dari grup yg mute Anda
 
 **Auto-Reply**
 `.autoreply on` - Away mode
