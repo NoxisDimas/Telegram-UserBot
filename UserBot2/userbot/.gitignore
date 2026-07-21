@@ -1,0 +1,30 @@
+# Environments
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Log files
+*.log
+all_logs.txt
+logs.txt
+logs2.txt
+logs3.txt
+logs4.txt
+logs5.txt
+logs6.txt
+
+# Telegram Sessions
+session/
+*.session
+*.session-journal
+
+# VS Code / IDEs
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - userbot_net
+
+  userbot:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: always
+    user: root
+    environment:
+      - PYTHONPATH=/home/user/.local/lib/python3.11/site-packages
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    volumes:
+      - ./session:/app/session
+    networks:
+      - userbot_net
+
+volumes:
+  redis_data:
+
+
+networks:
+  userbot_net:
+    driver: bridge
